@@ -1,29 +1,55 @@
 module.exports = function getZerosCount(number, base) {
-  var multipliers = getMultipliers(number, base);
-  function getMultipliers(number, base) {
-    var multipliers = [];
-    if (base > 1) { 
-      for (var i = 2; i <= base; i++) { 
-        while (base % i == 0 && base > 1) { 
-          multipliers.push(i); 
-          base = base/i; 
-        } 
-        if (base/i == 1) { 
-          multipliers.push(base); 
-        } 
-      } 
-    }  
-    return multipliers;
+  //finally checked all features of ES6, so now can use it rightly:)
+  const multipliers = getMultipliers(number, base);
+  const zerosArray = [];
+ 
+  for (let i = 0; i < multipliers.length; i++) {
+    const currentMultiplier = multipliers[i].value;
+    let components = 0;
+ 
+    for (let n = 1; Math.pow(currentMultiplier, n) <= number; n++) {
+      components += Math.floor(number / Math.pow(currentMultiplier, n));
+    }
+ 
+    zerosArray.push(Math.floor(components / multipliers[i].count));
   }
-  var zerosArray = [];
-  for (var i = 0; i < multipliers.length; i++) {
-    var currentMultiplier = multipliers[i];
-    var components = 0;
-    for (var n = 1; Math.pow(currentMultiplier, n) <= number; n++) { 
-      components += Math.floor(number/Math.pow(currentMultiplier, n));  
-    } 
-    zerosArray.push(components);
+ 
+  return Math.min(...zerosArray);
+}
+ 
+function getMultipliers(number, base) {
+  const multipliers = [];
+ 
+  if (base > 1) {
+    for (var i = 2; i <= base; i++) {
+      while (base % i === 0 && base > 1) {
+        multipliers.push(i);
+        base = base / i;
+      }
+      if (base / i === 1) {
+        multipliers.push(base);
+      }
+    }
   }
-  var zerosTotal = Math.min(...zerosArray); 
-  return zerosTotal; 
+ 
+  return getUniqMultipliers(multipliers)
+}
+ 
+function getUniqMultipliers(array) {
+  const uniqMultipliers = [];
+ 
+  for (let i = 0; i < array.length; i++) {
+    if (!uniqMultipliers.includes(array[i])) {
+      uniqMultipliers.push(array[i]);
+    }
+  }
+ 
+  return uniqMultipliers.map((uniqMultiplier) => {
+    const count = array.filter(multiplier => multiplier === uniqMultiplier).length;
+ 
+    return {
+      value: uniqMultiplier,
+      count: count
+    }
+  })
 }
