@@ -1,5 +1,4 @@
-module.exports = function getZerosCount(number, base) {
-  //finally checked all features of ES6, so now can use it rightly:)
+ module.exports = function getZerosCount(number, base) {
   const multipliers = getMultipliers(number, base);
   const zerosArray = [];
  
@@ -21,7 +20,7 @@ function getMultipliers(number, base) {
   const multipliers = [];
  
   if (base > 1) {
-    for (var i = 2; i <= base; i++) {
+    for (let i = 2; i <= base; i++) {
       while (base % i === 0 && base > 1) {
         multipliers.push(i);
         base = base / i;
@@ -51,5 +50,5 @@ function getUniqMultipliers(array) {
       value: uniqMultiplier,
       count: count
     }
-  })
+  });
 }
